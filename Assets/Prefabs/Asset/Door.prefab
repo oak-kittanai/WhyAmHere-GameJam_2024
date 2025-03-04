@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2255014947499214804}
   - component: {fileID: 6805283590564480386}
   - component: {fileID: 7424887189229738269}
-  - component: {fileID: 292560141403041008}
+  - component: {fileID: 2049478075291813675}
   m_Layer: 0
   m_Name: Door
   m_TagString: Interact
@@ -73,7 +73,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 792209337
-  m_SortingLayer: 5
+  m_SortingLayer: 7
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 8424e4919c53fb94a80c879aef1f0680, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -131,7 +131,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 3.8797152, y: 5.8667088}
   m_EdgeRadius: 0
---- !u!114 &292560141403041008
+--- !u!114 &2049478075291813675
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -140,12 +140,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 2844765735678818253}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 112a20b360b653d44ac1c23121d931bb, type: 3}
+  m_Script: {fileID: 11500000, guid: ef5c27ddb643ee945bdaae96e7f275d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   sRender: {fileID: 6805283590564480386}
   DoorOpen: {fileID: 21300000, guid: 889a6830076cbd04a810a601333e919d, type: 3}
   DoorClose: {fileID: 21300000, guid: 8424e4919c53fb94a80c879aef1f0680, type: 3}
   Player: {fileID: 0}
+  transiton: {fileID: 0}
+  transitonTime: 1
   playerInRange: 0
-  playerPos: {x: -2.19, y: -1.53}
+  _roomSelect: 0
+  RoomTeleportPosition: {x: 0, y: 0}

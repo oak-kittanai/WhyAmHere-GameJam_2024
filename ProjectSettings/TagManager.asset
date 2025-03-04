@@ -10,6 +10,12 @@ TagManager:
   - Key 1
   - Key 2
   - Enemy
+  - TopLight
+  - Black
+  - SupChat
+  - Stair
+  - Attack
+  - ExitZone
   layers:
   - Default
   - TransparentFX
@@ -56,6 +62,12 @@ TagManager:
   - name: Wall
     uniqueID: 3246074785
     locked: 0
+  - name: Decoration
+    uniqueID: 911403861
+    locked: 0
+  - name: Stair
+    uniqueID: 655591747
+    locked: 0
   - name: Ground
     uniqueID: 4068101609
     locked: 0
@@ -70,4 +82,10 @@ TagManager:
     locked: 0
   - name: Item
     uniqueID: 3458936403
+    locked: 0
+  - name: Boss
+    uniqueID: 2018827817
+    locked: 0
+  - name: Door Out
+    uniqueID: 80357507
     locked: 0

@@ -7,7 +7,7 @@ public class KeyItem : MonoBehaviour
     [Header("Ref")]
     Inventory inventory;
 
-    [Header("Is")]
+    [Header("Bool")]
     public bool playerInRange;
 
     [Header("Is")]
@@ -32,11 +32,17 @@ public class KeyItem : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        playerInRange = true;
+        if (collision.gameObject.tag == "Player")
+        {
+            playerInRange = true;
+        }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        playerInRange = false;
+        if (collision.gameObject.tag == "Player")
+        {
+            playerInRange = false;
+        }
     }
 }

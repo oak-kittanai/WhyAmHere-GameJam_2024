@@ -1,14 +1,28 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering.UI;
 using UnityEngine.UI;
 
 public class Inventory : MonoBehaviour
 {
+    [Header("Ref")]
+    FlashLight flash;
+
+    [SerializeField] private TMP_Text _paperQuestText;
+    [SerializeField] private TMP_Text _keyQuesText;
+    [SerializeField] private TMP_Text _entranceText;
+
     [Header("Item")]
     public bool haveFlash;
     public bool haveBigFlash;
+
+    [SerializeField] private int _paperQuantity;
+
+    public int Battry;
+    public bool isReCharge;
 
     [Header("Key")]
     public bool haveKey1;
@@ -16,6 +30,9 @@ public class Inventory : MonoBehaviour
 
     public bool isKey1;
     public bool isKey2;
+
+    public GameObject Key1;
+    public GameObject Key2;
 
     [Header("Paper")]
     public bool havePaper1;
@@ -36,8 +53,18 @@ public class Inventory : MonoBehaviour
     public RawImage Item1, Item2, Item3;
     public GameObject intory;
 
+    public TextMeshProUGUI NumBattry;
+
+    [Header ("Codition")]
+    public bool Quest1;
+    public bool Quest2;
+
+    public bool LastQuest;
+
     private void Start()
     {
+        Battry = 8;
+        isReCharge = true;
         // Item
         haveFlash = true;
 
@@ -52,19 +79,39 @@ public class Inventory : MonoBehaviour
         havePaper1 = false;
         havePaper2 = false;
         havePaper3 = false;
-        havePaper4 = false;
-        havePaper5 = false;
-        havePaper6 = false;
+
+        flash = FindFirstObjectByType<FlashLight>();
     }
 
     private void Update()
     {
-        SwitchItem();
+        NumBattry.text = "" + Battry;
 
-        if (Input.GetKeyDown(KeyCode.I))
+        if (Battry == 0)
         {
-            intory.SetActive(!intory.active);
+            isReCharge = false;
         }
+        
+
+        if (haveKey1 == false)
+        {
+            Key1.SetActive(false);
+        }
+        if (haveKey2 == false)
+        {
+            Key2.SetActive(false);
+        }
+
+        if (haveKey1 == true)
+        {
+            Key1.SetActive(true);
+        }
+        if (haveKey2 == true)
+        {
+            Key2.SetActive(true);
+        }
+
+        SwitchItem();
 
         if (currentItem == 2)
         {
@@ -85,6 +132,7 @@ public class Inventory : MonoBehaviour
             }
         }
 
+        UpdateUIQuest();
     }
 
     void SwitchItem()
@@ -92,7 +140,7 @@ public class Inventory : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             currentItem = (int)Item.Flash;
-            Item1.color = Color.red;
+            Item1.color = Color.gray;
             Item2.color = Color.white;
             Item3.color = Color.white;
         }
@@ -101,7 +149,7 @@ public class Inventory : MonoBehaviour
         {
             currentItem = (int)Item.BigFlash;
             Item1.color = Color.white;
-            Item2.color = Color.red;
+            Item2.color = Color.gray;
             Item3.color = Color.white;
         }
 
@@ -110,17 +158,8 @@ public class Inventory : MonoBehaviour
             currentItem = (int)Item.Key;
             Item1.color = Color.white;
             Item2.color = Color.white;
-            Item3.color = Color.red;
+            Item3.color = Color.gray;
         }
-    }
-
-    public void ChangeKey1()
-    {
-        currentKey = (int)Key.Key1;
-    }
-    public void ChangeKey2()
-    {
-        currentKey = (int)Key.Key2;
     }
 
     public void GetKey(int x)
@@ -128,10 +167,48 @@ public class Inventory : MonoBehaviour
         if (x == 1)
         {
             haveKey1 = true;
+            AudioManager.instance.GetKey.Play();
         }
         if (x == 2)
         {
             haveKey2 = true;
+            AudioManager.instance.GetKey.Play();
+        }
+
+    }
+
+    public void UseBattry()
+    {
+        if (isReCharge == true)
+        {
+            flash.ReCharge();
+            Battry = Battry - 1;
+        }
+    }
+
+    public void UpdateUIQuest()
+    {
+        _paperQuestText.text = ($"Find {_paperQuantity} / 3 Paper");
+        if (_paperQuantity == 3)
+        {
+            _paperQuestText.color = Color.green;
+            Quest1 = true;
+        }
+
+        _keyQuesText.text = "Find A Sliver Key";
+        if (haveKey2 == true)
+        {
+            _keyQuesText.color = Color.green;
+            Quest2 = true;
+        }
+
+        if (Quest1 == true && Quest2 == true)
+        {
+            LastQuest = true;
+            _entranceText.color = Color.red;
+            _entranceText.text = "Go Back To The Entrance And Leave";
+            _paperQuestText.text = "";
+            _keyQuesText.text = "";
         }
     }
 }

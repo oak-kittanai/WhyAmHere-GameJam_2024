@@ -1,22 +1,27 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEngine.EventSystems.EventTrigger;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager Instance;
+
     [Header("Ref")]
-    PlayerController player;
+    InventoryPlayer inventoryPlayer;
+    PlayerMovement playerMovement;
+    StatsPlayer statsPlayer;
     Inventory Inventory;
 
     [Header("UI")]
     public GameObject menuEsc;
+    public GameObject questList;
+
+    public GameObject GameOverMenu;
 
     [Header("Hp")]
     public int hp = 5;
     public int maxhp = 5;
     public Image[] Hearts;
+    bool _isGameOver;
 
     public Sprite fullHeart;
     public Sprite emptyHeart;
@@ -25,14 +30,33 @@ public class GameManager : MonoBehaviour
     public bool isFlash;
     public bool isBigFlash;
 
+    [Header("Damage Cooldown")]
+    public float damageCooldown;
+    private float currentDamageCooldown;
+
+    public Vector2 _playerPosition;
+
+    public AudioSource hitSfx;
+
     private void Start()
     {
-        player = FindFirstObjectByType<PlayerController>();
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+
+        playerMovement = FindFirstObjectByType<PlayerMovement>();
+        inventoryPlayer = FindFirstObjectByType<InventoryPlayer>();
+        statsPlayer = FindFirstObjectByType<StatsPlayer>();
         Inventory = FindFirstObjectByType<Inventory>();
+
+        GameOverMenu.SetActive(false);
 
         menuEsc.SetActive(false);
         isFlash = false;
-        isBigFlash = false;
+        isBigFlash = false; 
+
+        questList.SetActive(false);
     }
 
     private void Update()
@@ -41,6 +65,19 @@ public class GameManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             menuEsc.SetActive(!menuEsc.active);
+            if (Time.timeScale != 0)
+            {
+                Time.timeScale = 0;
+            }else
+            {
+                Time.timeScale = 1;
+            }
+            
+        }
+
+        if (currentDamageCooldown > 0)
+        {
+            currentDamageCooldown -= Time.deltaTime;
         }
 
 
@@ -60,6 +97,8 @@ public class GameManager : MonoBehaviour
             isBigFlash = false;
             isFlash = false;
         }
+
+
     }
 
     public void HeartsSystem()
@@ -85,7 +124,7 @@ public class GameManager : MonoBehaviour
             }
 
             if (i < maxhp)
-            {
+            {   
                 Hearts[i].enabled = true;
             }
             else
@@ -93,12 +132,32 @@ public class GameManager : MonoBehaviour
                 Hearts[i].enabled = false;
             }
         }
+
+
+        if (hp == 0)
+        {
+            if (!_isGameOver)
+            {
+                GameOverMenu.SetActive(true);
+                Time.timeScale = 0;
+            }
+            _isGameOver = true;
+        }
     }
 
-    public void GetHit()
+    public void QuestAccept()
     {
-        hp = hp - 1;
+        questList.SetActive(true);
     }
 
-    
+    public void GetHit(int damage)
+    {
+        if (currentDamageCooldown > 0) return;
+
+        hp = hp - damage;
+        currentDamageCooldown = damageCooldown;
+        hitSfx.Play();
+        StatsPlayer.Instance.HitDelay();
+    }
+
 }
